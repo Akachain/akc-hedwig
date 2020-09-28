@@ -2,7 +2,7 @@
 
 # (Found at https://github.com/fluent/fluent-bit-kubernetes-logging and updated)
 # Create the namespace
-kubectl create namespace logging
+kubectl create namespace graylog
 
 # Create the base resources
 kubectl create -f fluent-bit-service-account.yaml
