@@ -61,7 +61,7 @@ data:
     [OUTPUT]
         Name          gelf
         Match         kube.*
-        Host          10.100.182.241
+        # Host         
         Port          514
         Mode          udp
         Gelf_Short_Message_Key log

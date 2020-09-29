@@ -124,17 +124,17 @@ client:
   nodeSelector: {}
   tolerations: []
   # terminationGracePeriodSeconds: 60
-  initResources: {}
-    # limits:
-    #   cpu: "25m"
-    #   # memory: "128Mi"
-    # requests:
-    #   cpu: "25m"
-    #   memory: "128Mi"
+  initResources: 
+    limits:
+      cpu: "25m"
+      memory: "128Mi"
+    requests:
+      cpu: "25m"
+      memory: "128Mi"
   resources:
     limits:
-      cpu: "1"
-      # memory: "1024Mi"
+      cpu: "0.5"
+      memory: "1024Mi"
     requests:
       cpu: "25m"
       memory: "512Mi"
@@ -190,17 +190,17 @@ master:
   nodeSelector: {}
   tolerations: []
   # terminationGracePeriodSeconds: 60
-  initResources: {}
-    # limits:
-    #   cpu: "25m"
-    #   # memory: "128Mi"
-    # requests:
-    #   cpu: "25m"
-    #   memory: "128Mi"
+  initResources:
+    limits:
+      cpu: "25m"
+      memory: "128Mi"
+    requests:
+      cpu: "25m"
+      memory: "128Mi"
   resources:
     limits:
-      cpu: "1"
-      # memory: "1024Mi"
+      cpu: "0.5"
+      memory: "1024Mi"
     requests:
       cpu: "25m"
       memory: "512Mi"
@@ -245,20 +245,20 @@ data:
   nodeAffinity: {}
   nodeSelector: {}
   tolerations: []
-  initResources: {}
-    # limits:
-    #   cpu: "25m"
-    #   # memory: "128Mi"
-    # requests:
-    #   cpu: "25m"
-    #   memory: "128Mi"
-  resources:
+  initResources: 
     limits:
-      cpu: "1"
-      # memory: "2048Mi"
+      cpu: "25m"
+      memory: "128Mi"
     requests:
       cpu: "25m"
-      memory: "1536Mi"
+      memory: "128Mi"
+  resources:
+    limits:
+      cpu: "0.5"
+      memory: "1.8Gi"
+    requests:
+      cpu: "25m"
+      memory: "128Mi"
   priorityClassName: ""
   ## (dict) If specified, apply these annotations to each data Pod
   # podAnnotations:
