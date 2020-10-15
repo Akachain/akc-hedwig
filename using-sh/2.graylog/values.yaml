@@ -206,7 +206,7 @@ graylog:
 
   ## External URL to access Graylog at
   ##
-  externalUri: "graylog-dev.akachains.io"
+  externalUri: ""
 
   ingress:
     ## If true, Graylog server Ingress will be created
@@ -220,8 +220,7 @@ graylog:
     ## Must be provided if Ingress is enabled
     ## Note: Graylog does not support two URL. You can specify only single URL
     ## MUST DEFINE
-    hosts:
-      - graylog-dev.akachains.io
+    hosts: []
 
     ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
     extraPaths: []
