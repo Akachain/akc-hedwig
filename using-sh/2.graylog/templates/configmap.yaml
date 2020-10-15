@@ -143,7 +143,7 @@ data:
   entrypoint.sh: |-
     #!/usr/bin/env bash
 
-    export GRAYLOG_HTTP_PUBLISH_URI="{{ template "graylog.formatUrl" (list . "$(hostname -f):9000/") }}"
+    export GRAYLOG_HTTP_PUBLISH_URI="{{ $externalUri }}"
 
     GRAYLOG_HOME=/usr/share/graylog
     # Looking for Master IP

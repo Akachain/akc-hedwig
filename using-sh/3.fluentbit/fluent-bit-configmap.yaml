@@ -10,7 +10,7 @@ data:
   # ======================================================
   fluent-bit.conf: |
     [SERVICE]
-        Flush         2
+        Flush         1
         Log_Level     info
         Daemon        off
         Parsers_File  parsers.conf
@@ -32,6 +32,16 @@ data:
         Mem_Buf_Limit     5MB
         Refresh_Interval  10
         Docker_Mode       On
+        Docker_Mode_Parser first_line
+        Skip_Long_Lines  On
+        # Multiline On
+        Multiline_Flush 5
+        # Parser_Firstline first_line
+
+        # Multiline         On
+        # Multiline_Flush 5
+        # Parser_Firstline  log_date
+        # Parser_1          log_attributes
  
   filter-kubernetes.conf: |
     [FILTER]
@@ -39,7 +49,10 @@ data:
         Match               kube.*
         Kube_URL            https://kubernetes.default.svc.cluster.local:443
         Merge_Log           On
+        Merge_Log_Trim      On     
+        Merge_Log_Key       hello   
         K8S-Logging.Parser  On
+        Keep_Log            On
 
     # ${HOSTNAME} returns the host name.
     # But Fluentbit runs in a container. So, it is not meaningful.
@@ -61,7 +74,7 @@ data:
     [OUTPUT]
         Name          gelf
         Match         kube.*
-        # Host         
+        Host          graylog-udp
         Port          514
         Mode          udp
         Gelf_Short_Message_Key log
@@ -79,11 +92,12 @@ data:
         # Decode_Field_As   escaped    log
         # Decode_Field_As   json       log   
         # Decode_Field_As escaped log do_next
-        # Decode_Field_As json log
+        Decode_Field_As json log try_next
         # Decode_JSON_Field   message
-        # Decode_Field_As   escaped_utf8    log    do_next
-        # Decode_Field_As   escaped         log    do_next
-        # Decode_Field_As   json            log
+        # Decode_Field_As   escaped_utf8    log    try_next
+        # Decode_Field_As   escaped         log    try_next
+        # Decode_Field_As   json            log    try_next
+
     [PARSER]
         Name        syslog
         Format      regex
@@ -95,7 +109,31 @@ data:
         Format json
         Time_Key time
         Time_Format %d/%b/%Y:%H:%M:%S %z
+    # [PARSER]
+    #     Name   multi_line
+    #     Format regex
+    #     Regex  [%Y-%m-%dT%H:%M:%S.%L]
+
     [PARSER]
-        Name   multi_line
+        Name         log_date
+        Format       regex
+        Regex        .*\[\d{4}-\d{1,2}-\d{1,2}.*
+    [PARSER]
         Format regex
-        Regex:  [%Y-%m-%dT%H:%M:%S.%L]
+        Name java_multiline
+        Regex (?<apptime>\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}\.\d{3})
+        Time_Format %Y-%m-%d %H:%M:%S.%L
+        Time_Keep true
+        Time_Key apptime
+    [PARSER]
+        Name        log_attributes
+        Format      regex
+        Regex       /(?<level>[^\s]+:)(?<message>[\s\S]*)/
+    [PARSER]
+        Name        log_spec
+        Format      regex
+        Regex       ========
+    [PARSER]
+        Name        first_line
+        Format      regex
+        Regex       ^{"log":"(?!\\u0009)(?<log>\S(?:(\\")|[^"]){9}(?:(\\")|[^"])*)"
