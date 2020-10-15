@@ -205,8 +205,8 @@ graylog:
     certFile: /etc/graylog/server/server.cert
 
   ## External URL to access Graylog at
-  ## MUST DEFINE
-  externalUri: ""
+  ##
+  externalUri: "graylog-dev.akachains.io"
 
   ingress:
     ## If true, Graylog server Ingress will be created
@@ -216,12 +216,12 @@ graylog:
     ##
     annotations: 
       kubernetes.io/ingress.class: nginx
-
     ## Graylog server Ingress hostnames with optional path
     ## Must be provided if Ingress is enabled
     ## Note: Graylog does not support two URL. You can specify only single URL
     ## MUST DEFINE
-    hosts: []
+    hosts:
+      - graylog-dev.akachains.io
 
     ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
     extraPaths: []
@@ -255,10 +255,11 @@ graylog:
   ##
   resources:
     limits:
-      cpu: "0.5"
+      cpu: "0.4"
+      memory: "1.5Gi"
     requests:
       cpu: "100m"
-      memory: "1024Mi"
+      memory: "300Mi"
 
   ## Set Graylog Java heapsize. If this value empty, chart will allocate heapsize using `-XX:+UseCGroupMemoryLimitForHeap`
   ## ref: https://blogs.oracle.com/java-platform-group/java-se-support-for-docker-cpu-and-memory-limits
