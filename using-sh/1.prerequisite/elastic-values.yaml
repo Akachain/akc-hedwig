@@ -232,7 +232,7 @@ data:
     enabled: true
     accessMode: ReadWriteOnce
     name: data
-    size: "10Gi"
+    size: "30Gi"
     # storageClass: "ssd"
   readinessProbe:
     enabled: false
