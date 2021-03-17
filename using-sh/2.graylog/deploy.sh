@@ -1,1 +1,1 @@
-helm install --namespace "graylog" -n "graylog" .
+helm install --namespace "graylog" -n "graylog" ../../helm-chart/graylog -f values.yaml

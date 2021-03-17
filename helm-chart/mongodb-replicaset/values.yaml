@@ -7,7 +7,7 @@ global: {}
 # global:
 #   namespaceOverride: ""
 
-replicas: 3
+replicas: 1
 port: 27017
 
 ## Setting this will skip the replicaset and user creation process during bootstrapping
@@ -93,13 +93,13 @@ init:
   resources: {}
   timeout: 900
 
-resources: {}
-# limits:
-#   cpu: 500m
-#   memory: 512Mi
-# requests:
-#   cpu: 100m
-#   memory: 256Mi
+resources: 
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
 
 ## Node selector
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
@@ -186,6 +186,7 @@ initMongodStandalone: ""
 
 # Readiness probe
 readinessProbe:
+  enabled: false
   initialDelaySeconds: 5
   timeoutSeconds: 1
   failureThreshold: 3
@@ -194,6 +195,7 @@ readinessProbe:
 
 # Liveness probe
 livenessProbe:
+  enabled: false
   initialDelaySeconds: 30
   timeoutSeconds: 5
   failureThreshold: 3

@@ -74,7 +74,7 @@ cluster:
     # IMPORTANT: https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html#minimum_master_nodes
     # To prevent data loss, it is vital to configure the discovery.zen.minimum_master_nodes setting so that each master-eligible
     # node knows the minimum number of master-eligible nodes that must be visible in order to form a cluster.
-    MINIMUM_MASTER_NODES: "2"
+    MINIMUM_MASTER_NODES: "1"
   # List of plugins to install via dedicated init container
   plugins: []
     # - ingest-attachment
@@ -106,10 +106,9 @@ cluster:
     rootLogger.appenderRef.console.ref = console
     logger.searchguard.name = com.floragunn
     logger.searchguard.level = info
-
 client:
   name: client
-  replicas: 2
+  replicas: 1
   serviceType: ClusterIP
   ## If coupled with serviceType = "NodePort", this will set a specific nodePort to the client HTTP port
   # httpNodePort: 30920
@@ -118,24 +117,24 @@ client:
 ## (dict) If specified, apply these annotations to the client service
 #  serviceAnnotations:
 #    example: client-svc-foo
-  heapSize: "512m"
+  heapSize: "216m"
   # additionalJavaOpts: "-XX:MaxRAM=512m"
   antiAffinity: "soft"
   nodeAffinity: {}
   nodeSelector: {}
   tolerations: []
   # terminationGracePeriodSeconds: 60
-  initResources: {}
-    # limits:
-    #   cpu: "25m"
-    #   # memory: "128Mi"
-    # requests:
-    #   cpu: "25m"
-    #   memory: "128Mi"
+  initResources: 
+    limits:
+      cpu: "25m"
+      memory: "128Mi"
+    requests:
+      cpu: "25m"
+      memory: "128Mi"
   resources:
     limits:
-      cpu: "1"
-      # memory: "1024Mi"
+      cpu: "0.5"
+      memory: "700Mi"
     requests:
       cpu: "25m"
       memory: "512Mi"
@@ -171,8 +170,8 @@ client:
 master:
   name: master
   exposeHttp: false
-  replicas: 3
-  heapSize: "512m"
+  replicas: 2
+  heapSize: "216m"
   # additionalJavaOpts: "-XX:MaxRAM=512m"
   persistence:
     enabled: true
@@ -181,6 +180,7 @@ master:
     size: "4Gi"
     # storageClass: "ssd"
   readinessProbe:
+    enabled: false
     httpGet:
       path: /_cluster/health?local=true
       port: 9200
@@ -190,17 +190,17 @@ master:
   nodeSelector: {}
   tolerations: []
   # terminationGracePeriodSeconds: 60
-  initResources: {}
-    # limits:
-    #   cpu: "25m"
-    #   # memory: "128Mi"
-    # requests:
-    #   cpu: "25m"
-    #   memory: "128Mi"
+  initResources:
+    limits:
+      cpu: "25m"
+      memory: "128Mi"
+    requests:
+      cpu: "25m"
+      memory: "128Mi"
   resources:
     limits:
-      cpu: "1"
-      # memory: "1024Mi"
+      cpu: "0.5"
+      memory: "700Mi"
     requests:
       cpu: "25m"
       memory: "512Mi"
@@ -211,7 +211,7 @@ master:
   podManagementPolicy: OrderedReady
   podDisruptionBudget:
     enabled: false
-    minAvailable: 2  # Same as `cluster.env.MINIMUM_MASTER_NODES`
+    minAvailable: 1  # Same as `cluster.env.MINIMUM_MASTER_NODES`
     # maxUnavailable: 1
   updateStrategy:
     type: OnDelete
@@ -225,8 +225,8 @@ master:
 data:
   name: data
   exposeHttp: false
-  replicas: 2
-  heapSize: "1536m"
+  replicas: 1
+  heapSize: "512m"
   # additionalJavaOpts: "-XX:MaxRAM=1536m"
   persistence:
     enabled: true
@@ -235,6 +235,7 @@ data:
     size: "30Gi"
     # storageClass: "ssd"
   readinessProbe:
+    enabled: false
     httpGet:
       path: /_cluster/health?local=true
       port: 9200
@@ -244,20 +245,20 @@ data:
   nodeAffinity: {}
   nodeSelector: {}
   tolerations: []
-  initResources: {}
-    # limits:
-    #   cpu: "25m"
-    #   # memory: "128Mi"
-    # requests:
-    #   cpu: "25m"
-    #   memory: "128Mi"
-  resources:
+  initResources: 
     limits:
-      cpu: "1"
-      # memory: "2048Mi"
+      cpu: "25m"
+      memory: "128Mi"
     requests:
       cpu: "25m"
-      memory: "1536Mi"
+      memory: "128Mi"
+  resources:
+    limits:
+      cpu: "0.5"
+      memory: "1Gi"
+    requests:
+      cpu: "25m"
+      memory: "128Mi"
   priorityClassName: ""
   ## (dict) If specified, apply these annotations to each data Pod
   # podAnnotations:
@@ -313,5 +314,4 @@ chownInitContainer:
   enabled: true
 ## Additional init containers
 extraInitContainers: |
-
 forceIpv6: false
