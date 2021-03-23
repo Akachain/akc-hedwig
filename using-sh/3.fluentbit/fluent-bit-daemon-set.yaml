@@ -41,6 +41,8 @@ spec:
         - name: mnt
           mountPath: /mnt
           readOnly: true
+      imagePullSecrets:
+      - name: github-pull-image
       terminationGracePeriodSeconds: 10
       volumes:
       - name: varlog
